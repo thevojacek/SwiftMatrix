@@ -75,13 +75,17 @@ extension SwiftMatrix {
     
     /// Multiplies every element of matrix by a scalar value.
     ///
-    /// - Parameter _scalar: scalar value to multiply matrix by.
+    /// - Parameter scalar: scalar value to multiply matrix by.
     /// - Returns: new matrix.
     private func multiplyByScalar (_ scalar: Double) -> SwiftMatrix {
         let values = self.values.map { (value) -> Double in value * scalar }
         return SwiftMatrix(values, dimensions: self.dimensions)!
     }
     
+    /// Performs addition operation between two matrixes.
+    ///
+    /// - Parameter matrix: matrix to be added.
+    /// - Returns: new matrix.
     private func addMatrix (_ matrix: SwiftMatrix) -> SwiftMatrix? {
 
         if self.dimensions != matrix.dimensions {
@@ -98,6 +102,10 @@ extension SwiftMatrix {
         return SwiftMatrix(values, dimensions: self.dimensions)!
     }
     
+    /// Performs multiplication operation between two matrixes.
+    ///
+    /// - Parameter matrix: matrix to multiply by.
+    /// - Returns: new matrix.
     private func multiplyMatrix (_ matrix: SwiftMatrix) -> SwiftMatrix? {
         
         if self.dimensions != matrix.dimensions {
@@ -114,6 +122,10 @@ extension SwiftMatrix {
         return SwiftMatrix(values, dimensions: self.dimensions)
     }
     
+    /// Performs division operation between two matrixes.
+    ///
+    /// - Parameter matrix: matrix to divide by.
+    /// - Returns: new matrix.
     private func divideMatrix (_ matrix: SwiftMatrix) -> SwiftMatrix? {
         
         if self.dimensions != matrix.dimensions {
@@ -192,6 +204,10 @@ extension SwiftMatrix {
         })
     }
     
+    /// Performs directional summary of matrix and returns new matrix with dimensions according the operation.
+    ///
+    /// - Parameter direction: direction in which to perform summary.
+    /// - Returns: new matrix.
     public func sum (to direction: SumDirection) -> SwiftMatrix? {
         
         // TODO: refactor (using new private method to get row and column)
@@ -244,10 +260,17 @@ extension SwiftMatrix {
         }
     }
     
+    /// Performs base logarithm operation over the matrix.
+    ///
+    /// - Returns: new matrix.
     public func log () -> SwiftMatrix? {
         return SwiftMatrix(self.values.map({ (value) -> Double in Darwin.log(value)}), dimensions: self.dimensions)
     }
 
+    /// Performs dot product operation between two matrixes if possible.
+    ///
+    /// - Parameter matrix: right-hand-side matrix.
+    /// - Returns: new matrix.
     public func dotProduct (with matrix: SwiftMatrix) -> SwiftMatrix? {
         
         guard self.dimensions.columns == matrix.dimensions.rows else {
@@ -287,6 +310,10 @@ extension SwiftMatrix {
 /// Extensions for private helper functions
 extension SwiftMatrix {
     
+    /// Gets an array of values of a selected row.
+    ///
+    /// - Parameter index: Index of the row to get.
+    /// - Returns: values of the row.
     private func getRow (at index: Int) -> [Double]? {
         
         guard index <= self.dimensions.rows else {
@@ -299,6 +326,10 @@ extension SwiftMatrix {
         return Array<Double>(self.values[offset..<count])
     }
     
+    /// Gets an array of values of a selected column.
+    ///
+    /// - Parameter index: Index of the column to get.
+    /// - Returns: values of the column.
     private func getColumn (at index: Int) -> [Double]? {
         
         guard index <= self.dimensions.columns else {
@@ -356,6 +387,7 @@ extension SwiftMatrix {
 /// Operator extensions for `Matrix`
 extension SwiftMatrix {
     
+    /// Addition operation.
     public static func +(lhs: SwiftMatrix, rhs: SwiftMatrix) -> SwiftMatrix? {
         
         if lhs.dimensions == rhs.dimensions {
@@ -373,10 +405,12 @@ extension SwiftMatrix {
         return nil
     }
     
+    /// Subtraction operation.
     public static func -(lhs: SwiftMatrix, rhs: SwiftMatrix) -> SwiftMatrix? {
         return lhs + rhs.invertSign()
     }
     
+    /// Multiplication operation.
     public static func *(lhs: SwiftMatrix, rhs: SwiftMatrix) -> SwiftMatrix? {
         
         if lhs.dimensions == rhs.dimensions {
@@ -394,6 +428,7 @@ extension SwiftMatrix {
         return nil
     }
     
+    /// Division operation.
     public static func /(lhs: SwiftMatrix, rhs: SwiftMatrix) -> SwiftMatrix? {
         
         if lhs.dimensions == rhs.dimensions {
